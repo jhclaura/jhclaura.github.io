@@ -43,7 +43,9 @@ var amplitude = 1;
 var offset = 0;
 var spin;
 var tanWave = new TanWave(time, frequency*5, amplitude, offset);
-var sinWave = new SinWave(time, frequency*5, amplitude/50, offset);
+var sinWave = new SinWave(time, frequency*5, amplitude/80, offset);
+var sinWaveB = new SinWave(time, frequency*8, amplitude/80, offset);
+var blueStar, pinkStar;
 
 ////////////////////////////////////////////////////////////
 
@@ -131,9 +133,9 @@ function init(){
 
 	// RAYCASTER!
 		eyerayCaster = new THREE.Raycaster();
-		dummyEye = new THREE.Mesh(new THREE.SphereGeometry(1),  new THREE.MeshBasicMaterial({color: 0xff0000}));
-		dummyEye.scale.set(0.1,0.1,0.1);
-		scene.add(dummyEye);
+		// dummyEye = new THREE.Mesh(new THREE.SphereGeometry(1),  new THREE.MeshBasicMaterial({color: 0xff0000}));
+		// dummyEye.scale.set(0.1,0.1,0.1);
+		// scene.add(dummyEye);
 		EyeColor = new THREE.Color( 0x0000ff );
 
 	// CONTROLS
@@ -182,22 +184,29 @@ function init(){
 		});
 
 	// STARS
-		loader.load("models/star.js", function(geometry){
-			starGeo = geometry;
-
-			var starData = {
-								sum: 1,
-								survey: {
-									speed: 3,
-									service: 5,
-									clean: 5,
-									product: 5
-								},
-								feedback: "Good smile!",
-								index: 0
-							};
-			var starrr = new Star( new THREE.Vector3(5,0,0), starData);
-			stars.push(starrr);
+		// loader.load("models/star.js", function(geometry){
+		// 	starGeo = geometry;
+		// 	var starData = {
+		// 						sum: 1,
+		// 						survey: {
+		// 							speed: 3,
+		// 							service: 5,
+		// 							clean: 5,
+		// 							product: 5
+		// 						},
+		// 						feedback: "Good smile!",
+		// 						index: 0
+		// 					};
+		// 	var starrr = new Star( new THREE.Vector3(5,0,0), starData);
+		// 	stars.push(starrr);
+		// });
+		loader.load("models/pinkS.js", function(geometry){
+			pinkStar = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color: 0xdb355b, shininess: 60 } ));
+			scene.add(pinkStar);
+		});
+		loader.load("models/blueS.js", function(geometry){
+			blueStar = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color: 0x353fdb, shininess: 60 } ));
+			scene.add(blueStar);
 		});
 
 	stats = new Stats();
@@ -331,41 +340,48 @@ function update()
 		flyLights[i].position.z = Math.sin(timeElapsed*0.3/4*(i+1))*10;
 	}
 
-	spin = 0.05*tanWave.run();
-	for(var i=0; i<stars.length; i++){
-		if(lookingAtStar==i){
-			// stars[i].body.rotation.y = spin;
-			stars[i].body.rotation.z = spin;
-		}
-	}
+	// spin = 0.05*tanWave.run();
+	var running = sinWave.run();
+	var runningB = sinWaveB.run();
+	// for(var i=0; i<stars.length; i++){
+	// 	if(lookingAtStar==i){
+	// 		// stars[i].body.rotation.y = spin;
+	// 		stars[i].body.rotation.z = spin;
+	// 	}
+	// }
+	if(pinkStar)
+		pinkStar.position.y += running;
+
+	if(blueStar)
+		blueStar.position.y += runningB/2;
 
 	// eyeRay!
-		var directionCam = controls.getDirection(1).clone();
-		eyerayCaster.set( controls.position().clone(), directionCam );
-		eyeIntersects = eyerayCaster.intersectObjects( scene.children, true );
-		//console.log(intersects);
+		// var directionCam = controls.getDirection(1).clone();
+		// eyerayCaster.set( controls.position().clone(), directionCam );
+		// eyeIntersects = eyerayCaster.intersectObjects( scene.children, true );
+		// //console.log(intersects);
 
-		if( eyeIntersects.length > 1 ){
-			var iName = eyeIntersects[ 1 ].object.name;
-			iName = iName.split(" ");
-			// console.log(iName);
-			// eyeIntersects[ 0 ].object.material.color.copy(EyeColor);
-			// console.log(eyeIntersects[ 0 ].object);
+		// if( eyeIntersects.length > 1 ){
+		// 	var iName = eyeIntersects[ 1 ].object.name;
+		// 	iName = iName.split(" ");
+		// 	// console.log(iName);
+		// 	// eyeIntersects[ 0 ].object.material.color.copy(EyeColor);
+		// 	// console.log(eyeIntersects[ 0 ].object);
 
-			if(iName.length==2){
-				lookingAtStar = iName[1];
-			} else {
-				lookingAtStar = -1;
-			}
+		// 	if(iName.length==2){
+		// 		lookingAtStar = iName[1];
+		// 	} else {
+		// 		lookingAtStar = -1;
+		// 	}
 
-			// var vector = new THREE.Vector3();
-			// // v1
-			// // vector.setFromMatrixPosition( eyeIntersects[ 0 ].object.matrixWorld );
+		// 	// var vector = new THREE.Vector3();
+		// 	// // v1
+		// 	// // vector.setFromMatrixPosition( eyeIntersects[ 0 ].object.matrixWorld );
 
-			// // v2
-			// vector.copy( eyeIntersects[ 1 ].point );
-			// dummyEye.position.copy( vector );
-		}
+		// 	// // v2
+		// 	// vector.copy( eyeIntersects[ 1 ].point );
+		// 	// dummyEye.position.copy( vector );
+		// }
 
 	//
 	time = Date.now();
