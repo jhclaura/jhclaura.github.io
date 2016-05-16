@@ -468,11 +468,11 @@ THREE.DeviceControls = function ( camera, worldCenter ) {
 
 		touchActive = true;
 
-		setTimeout(function(){
-			if(touchActive){
-				moveForward = true;
-			}
-		}, 1500);
+		// setTimeout(function(){
+		// 	if(touchActive){
+		// 		moveForward = true;
+		// 	}
+		// }, 1500);
 
 		var touch = event.touches[0];
 
@@ -589,8 +589,8 @@ THREE.DeviceControls = function ( camera, worldCenter ) {
 	} else {
 		document.addEventListener( 'mousemove', onMouseMove, false );
 		document.addEventListener( 'mousedown', myMouseDown, false );
-		document.addEventListener( 'keydown', onKeyDown, false );
-		document.addEventListener( 'keyup', onKeyUp, false );
+		// document.addEventListener( 'keydown', onKeyDown, false );
+		// document.addEventListener( 'keyup', onKeyUp, false );
 	}
 
 	if(!isMobile) {
