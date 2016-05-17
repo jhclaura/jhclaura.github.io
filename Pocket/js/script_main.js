@@ -28,6 +28,12 @@ var clouds = [];
 var glowTexture, lamp;
 var pocketBase, pocketTop, pocketFrame1, pocketFrame2, pocketPics;
 
+var restPics= [];
+var restPictures=["images/bb_pic/1.jpg", "images/bb_pic/2.jpg", "images/bb_pic/3.jpg",
+				  "images/bb_pic/4.jpg", "images/bb_pic/5.jpg", "images/bb_pic/6.jpg"];
+var restFrames=["models/pockets/picframe_1.js","models/pockets/picframe_2.js","models/pockets/picframe_3.js",
+				"models/pockets/picframe_4.js","models/pockets/picframe_5.js","models/pockets/picframe_6.js"];
+
 ////////////////////////////////////////////////////////////
 
 init();
@@ -142,6 +148,13 @@ function init(){
 
 		var tempTexture = textureLoader.load('images/bb.jpg');
 
+		restPic_1 = textureLoader.load('images/bb_pic/1.jpg');
+		restPic_2 = textureLoader.load('images/bb_pic/2.jpg');
+		restPic_3 = textureLoader.load('images/bb_pic/3.jpg');
+		restPic_4 = textureLoader.load('images/bb_pic/4.jpg');
+		restPic_5 = textureLoader.load('images/bb_pic/5.jpg');
+		restPic_6 = textureLoader.load('images/bb_pic/6.jpg');
+
 		loader.load("models/pockets/top.js", function(g_0){
 			pocketTop = new THREE.Mesh( g_0, pocketMat_w );
 
@@ -175,21 +188,48 @@ function init(){
 										frame2.position.set(0,-1,10.5);
 										frame1.add(frame2);
 
-										loader.load("models/pockets/pic_frame_2.js", function(g_7){
-											var picFrame = new THREE.Mesh( g_7, new THREE.MeshLambertMaterial({map:tempTexture}) );
-											picFrame.position.set(-0.5,-1,0.2);
-											picFrame.scale.y = 0.02;
-											frame1.add(picFrame);
+										var picFrame = new THREE.Object3D();
 
-											frame1.position.set(0,13.5,0);
-											frame1.rotation.x = Math.PI/2;
+										for(var i=0; i<restPictures.length; i++){
+											textureLoader.load( restPictures[i], function(pic){
+												restPics.push(pic);
 
-											pocketTop.add(frame1);
+												loader.load( restFrames[restPics.length-1] , function(geo){
+													var picF = new THREE.Mesh( geo, new THREE.MeshLambertMaterial({map: restPics[picFrame.children.length] }) );
+													picFrame.add(picF);
+												});
 
-											pocketTop.rotation.x = Math.PI/2;
-											scene.add(pocketTop);
-										});
-										
+												if(restPics.length==5){
+													picFrame.position.set(-0.5,-1,0.2);
+													picFrame.scale.y = 0.02;
+
+													frame1.add(picFrame);
+
+													frame1.position.set(0,13.5,0);
+													frame1.rotation.x = Math.PI/2;
+
+													pocketTop.add(frame1);
+
+													pocketTop.rotation.x = Math.PI/2;
+													scene.add(pocketTop);
+												}
+											} );										
+										}
+										// v1
+										// loader.load("models/pockets/pic_frame_2.js", function(g_7){
+										// 	var picFrame = new THREE.Mesh( g_7, new THREE.MeshLambertMaterial({map:tempTexture}) );
+										// 	picFrame.position.set(-0.5,-1,0.2);
+										// 	picFrame.scale.y = 0.02;
+										// 	frame1.add(picFrame);
+
+										// 	frame1.position.set(0,13.5,0);
+										// 	frame1.rotation.x = Math.PI/2;
+
+										// 	pocketTop.add(frame1);
+
+										// 	pocketTop.rotation.x = Math.PI/2;
+										// 	scene.add(pocketTop);
+										// });										
 									});
 								});								
 							});
